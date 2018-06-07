@@ -1,0 +1,29 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".txt" #>
+<#+
+	public abstract class Relationship
+    {
+        private string source_;
+        private string target_;
+
+        public Relationship(string source_, string target_)
+        {
+            this.source_ = source_;
+            this.target_ = target_;
+        }
+        
+        public string Source_ { get => source_; set => source_ = value; }
+        public string Target_ { get => target_; set => target_ = value; }
+    }
+
+    public class Compostion : Relationship
+    {
+        public Compostion(string source_, string target_) : base(source_, target_)
+        {
+        }
+    }
+#>

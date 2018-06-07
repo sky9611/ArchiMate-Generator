@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd" identifier="id-2ee4bc69">
+  <relationships>
+    <relationship identifier="id-62d1ae56-9207-4be4-903c-ba0a0aac94c8" source="id-dbbd33a3-fd07-4631-83bc-2a3d5ed88b90" target="id-ab530024" xsi:type="Composition" />
+    <relationship identifier="id-02f8059c-4526-4582-b2df-05d0cadca22a" source="id-dbbd33a3-fd07-4631-83bc-2a3d5ed88b90" target="id-cfb42693" xsi:type="Composition" />
+    <relationship identifier="id-c0386d37-1470-4665-a2ac-4930cf45d9e6" source="id-dbbd33a3-fd07-4631-83bc-2a3d5ed88b90" target="id-3e5ac6ab" xsi:type="Composition" />
+    <relationship identifier="id-0eaeebb1-6f8b-4a7e-b646-fd3ccc38a609" source="id-dbbd33a3-fd07-4631-83bc-2a3d5ed88b90" target="id-e8a2a14e" xsi:type="Composition" />
+  </relationships>
+</model>

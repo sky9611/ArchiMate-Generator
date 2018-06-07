@@ -1,0 +1,13 @@
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\bin\Debug\netcoreapp2.0\TemplateT4Test.deps.json
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\bin\Debug\netcoreapp2.0\TemplateT4Test.runtimeconfig.json
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\bin\Debug\netcoreapp2.0\TemplateT4Test.runtimeconfig.dev.json
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\bin\Debug\netcoreapp2.0\TemplateT4Test.dll
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\bin\Debug\netcoreapp2.0\TemplateT4Test.pdb
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\obj\Debug\netcoreapp2.0\TemplateT4Test.csprojAssemblyReference.cache
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\obj\Debug\netcoreapp2.0\TemplateT4Test.csproj.CoreCompileInputs.cache
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\obj\Debug\netcoreapp2.0\TemplateT4Test.AssemblyInfoInputs.cache
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\obj\Debug\netcoreapp2.0\TemplateT4Test.AssemblyInfo.cs
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\obj\Debug\netcoreapp2.0\TemplateT4Test.dll
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\obj\Debug\netcoreapp2.0\TemplateT4Test.pdb
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\bin\Debug\netcoreapp2.0\ArchiLibrary.dll
+D:\documents\INSA\maidis\vs\test\TemplateT4Test\TemplateT4Test\obj\Debug\netcoreapp2.0\TemplateT4Test.csproj.CopyComplete

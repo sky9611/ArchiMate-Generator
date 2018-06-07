@@ -1,0 +1,212 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="mscorlib" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace=" System.Text.RegularExpressions" #>
+<#@ include file="Element.tt"#>
+<#@ include file="StringHelper.ttinclude"#>
+<#@ include file="MultipleOutputHelper.ttinclude"#>
+<# 
+	var manager = Manager.Create(Host, GenerationEnvironment);
+	manager.StartNewFile("BusinessObject.generated.cs"); 
+#>
+using System.Collections.Generic;
+
+namespace MyProject
+{
+<#	
+	// The Visual Studio host, to get the local file path.
+	EnvDTE.DTE dte = (EnvDTE.DTE) ((IServiceProvider) this.Host).GetService(typeof(EnvDTE.DTE));
+
+	// Open the prototype document.
+	XElement doc = XElement.Load(System.IO.Path.Combine(dte.ActiveDocument.Path, "PLATEFORME_VNEXT.xml"));
+
+	// Get the nampespaces 
+	XNamespace NP = doc.GetDefaultNamespace();
+    XNamespace xmlns_xsi = "http://www.w3.org/2001/XMLSchema-instance";
+	
+	// Map identifier - element
+	Dictionary<string, Element> dict_element = new Dictionary<string, Element>();
+
+	// MultiMap of composition
+	Dictionary<string, List<string>> mmap_compostion = new Dictionary<string, List<string>>();
+
+	// MultiMap of aggregation
+	Dictionary<string, List<string>> mmap_aggregation = new Dictionary<string, List<string>>();
+
+	// Map of specialization
+	Dictionary<string, string> dict_specialization = new Dictionary<string, string>();
+	
+	// Make the map of id - element
+	foreach(var ele in doc.Descendants(NP + "element"))
+    {
+		Element element = new Element();
+		element.Identifier_ = ele.Attribute("identifier").Value;
+		element.Name_ = (ele.Element(NP + "name") != null) ? ele.Element(NP + "name").Value : "";
+		element.Documentation_ = (ele.Element(NP + "documentation") != null) ? ele.Element(NP + "documentation").Value : "";	
+		element.Type_ = ele.Attribute(xmlns_xsi + "type").Value;	
+		dict_element.Add(element.Identifier_, element);
+    }
+	
+	// Make the multimap of compostion-relationship
+	IEnumerable<XElement> xeles_compostion = from e in doc.Descendants(NP + "relationship")
+											 where e.Attribute(xmlns_xsi + "type").Value == "Composition"
+											 select e;
+	foreach(var ele in xeles_compostion)
+    {
+		List<string> list_target;
+		if (mmap_compostion.TryGetValue(ele.Attribute("source").Value, out list_target))
+        {
+            list_target.Add(ele.Attribute("target").Value);
+        }
+        else
+        {
+            list_target = new List<string>();
+            list_target.Add(ele.Attribute("target").Value);
+            mmap_compostion[ele.Attribute("source").Value] = list_target;
+        }
+		//mmap_compostion.Add(ele.Attribute("source").Value,ele.Attribute("target").Value);
+    }
+
+	// Make the map of specialzation-relationship of BusinessObject
+	IEnumerable<XElement> xeles_specialization = from e in doc.Descendants(NP + "relationship")
+												 where e.Attribute(xmlns_xsi + "type").Value == "Specialization"
+												 select e;
+	foreach(var ele in xeles_specialization)
+    {
+		string id_child = ele.Attribute("source").Value;
+		string id_parent = ele.Attribute("target").Value;
+		Element element_child = dict_element[id_child];
+		if (ele.Attribute("source").Value != ele.Attribute("target").Value && element_child.Type_ == "BusinessObject" && !dict_specialization.ContainsKey(id_child))
+		{
+			dict_specialization.Add(id_child,id_parent);
+		}
+    }
+
+	// Make the multimap of aggregation-relationship
+	IEnumerable<XElement> xeles_aggregation = from e in doc.Descendants(NP + "relationship")
+											  where e.Attribute(xmlns_xsi + "type").Value == "Aggregation"
+											  select e;
+	foreach(var ele in xeles_aggregation)
+    {
+		List<string> list_target;
+		if (mmap_aggregation.TryGetValue(ele.Attribute("source").Value, out list_target))
+        {
+            list_target.Add(ele.Attribute("target").Value);
+        }
+        else
+        {
+            list_target = new List<string>();
+            list_target.Add(ele.Attribute("target").Value);
+            mmap_aggregation[ele.Attribute("source").Value] = list_target;
+        }
+    }
+
+	// List to memory the id of classes created in order to avoid a dublicate defnition
+	//List<string> list_class_created = new List<string>();
+
+	// Generate classes for all BusinessObject.
+	// Get all the Xelements of BusinessObject
+	IEnumerable<XElement> xeles_business_object = from e in doc.Descendants(NP + "element")
+												  where e.Attribute(xmlns_xsi + "type").Value == "BusinessObject"
+												  select e;
+	foreach(var XBO in xeles_business_object)
+	{
+		Element BO = dict_element[XBO.Attribute("identifier").Value];
+		string class_name = XBO.Element(NP + "name").Value;
+#>
+	/// <summary> <#= (BO.Documentation_=="")?"":StringHelper.DocumentationTraitement(BO.Documentation_) #> </summary>
+	partial class <#= StringHelper.UpperString(class_name) #> {}
+
+<#
+	}
+
+	// Generate composition relationship between BusinessObject.
+	foreach (var idSource in mmap_compostion.Keys)
+	{
+		Element elementSource = dict_element[idSource];
+		if(elementSource.Type_.Equals("BusinessObject"))
+		{
+#>
+    partial class <#= StringHelper.UpperString(elementSource.Name_) #>
+    {
+		//private static string type_ = "<#= (elementSource.Type_.Equals("")) ? "" : elementSource.Type_ #>";
+<#
+		//list_class_created.Add(elementSource.Identifier_);
+		foreach (var idTarget in mmap_compostion[elementSource.Identifier_])
+		{
+			Element elementTarget = dict_element[idTarget];
+#>
+		List<<#= StringHelper.UpperString(elementTarget.Name_) #>> <#= StringHelper.LowerString(elementTarget.Name_) #>_ = 
+			new List<<#= StringHelper.UpperString(elementTarget.Name_) #>>();
+		public List<<#= StringHelper.UpperString(elementTarget.Name_) #>> <#= StringHelper.UpperString(elementTarget.Name_) #>_ { get => <#= StringHelper.LowerString(elementTarget.Name_) #>_; set => <#= StringHelper.LowerString(elementTarget.Name_) #>_ = value; }
+
+<#
+		}
+#>
+	}
+
+<#		
+	}
+}
+#>
+
+<#
+	// Generate specialization relationship between BusinessObject.
+	foreach (var idChild in dict_specialization.Keys)
+	{
+		Element elementChild = dict_element[idChild];
+		Element elementParent = dict_element[dict_specialization[idChild]];
+		if(elementChild.Type_.Equals("BusinessObject")&&elementParent.Type_.Equals("BusinessObject"))
+		{
+#>
+	partial class <#= StringHelper.UpperString(elementChild.Name_) #> : <#= StringHelper.UpperString(elementParent.Name_) #> {}
+<#
+		}
+	}
+#>
+
+<#
+	// Generate aggregation relationship between BusinessObject.
+	foreach (var idSource in mmap_aggregation.Keys)
+	{
+		Element elementSource = dict_element[idSource];
+		if(elementSource.Type_.Equals("BusinessObject"))
+		{
+#>
+    partial class <#= StringHelper.UpperString(elementSource.Name_) #>
+    {
+		//private static string type_ = "<#= (elementSource.Type_.Equals("")) ? "" : elementSource.Type_ #>";
+<#
+		//list_class_created.Add(elementSource.Identifier_);
+		foreach (var idTarget in mmap_aggregation[idSource])
+		{
+			Element elementTarget = dict_element[idTarget];
+#>
+		List<<#= StringHelper.UpperString(elementTarget.Name_) #>> <#= StringHelper.LowerString(elementTarget.Name_) #>_ ;
+		public List<<#= StringHelper.UpperString(elementTarget.Name_) #>> <#= StringHelper.UpperString(elementTarget.Name_) #>_ { get => <#= StringHelper.LowerString(elementTarget.Name_) #>_; set => <#= StringHelper.LowerString(elementTarget.Name_) #>_ = value; }
+
+<#
+		}
+#>
+	}
+
+<#		
+	}
+}
+#>
+}
+
+<# manager.EndBlock(); #>
+<# 
+	// Code for generating the 
+	//manager.Process(true); 
+#>

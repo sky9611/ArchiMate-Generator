@@ -1,0 +1,99 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Generated Codes\MultipleOutputHelper.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MultipleOutputHelper.tt</DependentUpon>
+    </None>
+    <None Include="Generated Codes\SaveOutput.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SaveOutput.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NHibernate" Version="5.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ArchiLibrary">
+      <HintPath>..\..\..\Projet\ArchiLibrary\ArchiLibrary\bin\Debug\netcoreapp2.0\ArchiLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Generated Codes\Fichier.Generator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Fichier.Generator.cs</LastGenOutput>
+    </None>
+    <None Update="Generated Codes\Element.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Element.txt</LastGenOutput>
+    </None>
+    <None Update="Generated Codes\Element.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Element.tt</DependentUpon>
+    </None>
+    <None Update="Generated Codes\MultipleOutputHelper.ttinclude">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MultipleOutputHelper.cs</LastGenOutput>
+    </None>
+    <None Update="Generated Codes\Relationship.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Relationship.txt</LastGenOutput>
+    </None>
+    <None Update="Generated Codes\Relationship.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Relationship.tt</DependentUpon>
+    </None>
+    <None Update="Generated Codes\SaveOutput.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SaveOutput.cs</LastGenOutput>
+    </None>
+    <None Update="Generated Codes\StringHelper.ttinclude">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StringHelper.txt</LastGenOutput>
+    </None>
+    <None Update="Generated Codes\StringHelper.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StringHelper.ttinclude</DependentUpon>
+    </None>
+    <None Update="Generated Codes\TemplateTest.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TemplateTest.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Generated Codes\Fichier.Generator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Fichier.Generator.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Generated Codes\MultipleOutputHelper.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MultipleOutputHelper.ttinclude</DependentUpon>
+    </Compile>
+    <Compile Update="Generated Codes\TemplateTest.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TemplateTest.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>
